@@ -10,6 +10,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -31,13 +32,17 @@ export class ProductDetailComponent implements OnInit {
   productId!: number;
   product: Product | null = null;
   loading = true;
+  isAdmin: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

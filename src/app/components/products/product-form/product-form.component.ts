@@ -78,7 +78,7 @@ export class ProductFormComponent implements OnInit {
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
-        this.categories = data;
+        this.categories = data.content;
       },
       error: (error) => {
         console.error('Error loading categories', error);

@@ -11,12 +11,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
+import { AuthService } from '../../../services/auth.service';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     MatTableModule,
     MatButtonModule,
@@ -33,11 +35,15 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   displayedColumns: string[] = ['id', 'name', 'price', 'status', 'code', 'actions'];
   loading = true;
+  isAdmin: boolean = false;
 
   constructor(
     private productService: ProductService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -47,7 +53,8 @@ export class ProductListComponent implements OnInit {
     this.loading = true;
     this.productService.getAllProducts().subscribe({
       next: (data) => {
-        this.products = data;
+        this.products = data.content;
+        console.log('Products loaded:', this.products);
         this.loading = false;
       },
       error: (error) => {

@@ -11,6 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-category-list',
@@ -33,11 +34,15 @@ export class CategoryListComponent implements OnInit {
   categories: Category[] = [];
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   loading = true;
+  isAdmin: boolean = false;
 
   constructor(
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+    private authService: AuthService
+  ) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -47,7 +52,7 @@ export class CategoryListComponent implements OnInit {
     this.loading = true;
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
-        this.categories = data;
+        this.categories = data.content;
         this.loading = false;
       },
       error: (error) => {

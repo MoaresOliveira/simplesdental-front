@@ -5,9 +5,11 @@
     </mat-card-header>
     <mat-card-content>
       <div class="button-container">
-        <a [routerLink]="['/products/new']" mat-raised-button color="primary">
-          <mat-icon>add</mat-icon> Add New Product
-        </a>
+        @if(isAdmin) {
+          <a [routerLink]="['/products/new']" mat-raised-button color="primary">
+            <mat-icon>add</mat-icon> Add New Product
+          </a>
+        }
       </div>
 
       <div *ngIf="loading" class="loading-spinner">
@@ -50,12 +52,14 @@
             <a [routerLink]="['/products', product.id]" mat-icon-button color="primary" matTooltip="View Details">
               <mat-icon>visibility</mat-icon>
             </a>
-            <a [routerLink]="['/products', product.id, 'edit']" mat-icon-button color="accent" matTooltip="Edit">
-              <mat-icon>edit</mat-icon>
-            </a>
-            <button mat-icon-button color="warn" (click)="deleteProduct(product.id)" matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
+            @if (isAdmin) {
+              <a [routerLink]="['/products', product.id, 'edit']" mat-icon-button color="accent" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button mat-icon-button color="warn" (click)="deleteProduct(product.id)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
           </td>
         </ng-container>
 

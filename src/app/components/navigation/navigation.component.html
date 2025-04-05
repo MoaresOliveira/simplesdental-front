@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
-  <span>Product-Category Management</span>
+  <span (click)="home()">Product-Category Management</span>
+  @if (isLoggedIn) {
   <span class="spacer"></span>
   <a mat-button routerLink="/products" routerLinkActive="active">
     <mat-icon>inventory_2</mat-icon> Products
@@ -7,4 +8,13 @@
   <a mat-button routerLink="/categories" routerLinkActive="active">
     <mat-icon>category</mat-icon> Categories
   </a>
+  @if(isAdmin) {
+  <a mat-button routerLink="/users" routerLinkActive="active">
+    <mat-icon>groups</mat-icon> Users
+  </a>
+  }
+  <a mat-button routerLink="/profile" routerLinkActive="active">
+    <mat-icon>person</mat-icon> Profile
+  </a>
+}
 </mat-toolbar>
