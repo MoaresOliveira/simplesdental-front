@@ -9,18 +9,14 @@
       </div>
 
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="Category name" required>
-          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
-            Name is required
-          </mat-error>
-        </mat-form-field>
+        <app-form-field label="Name" formControlName="name" placeholder="Category name">
+        </app-form-field>
+        <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" placeholder="Category description" rows="3"></textarea>
-        </mat-form-field>
+        <app-form-field label="Name" formControlName="name" placeholder="Category name" type="textarea">
+        </app-form-field>
 
         <div class="button-container">
           <button type="button" mat-button [routerLink]="['/categories']">Cancel</button>

@@ -13,31 +13,23 @@
       </div>
 
       <form [formGroup]="userForm" (ngSubmit)="updatePassword()" *ngIf="!loading">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="User name" readonly>
-        </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" placeholder="User email" readonly>
-        </mat-form-field>
+        <app-form-field label="Name" formControlName="name" placeholder="User name" type="text" [readonly]="true">
+        </app-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Role</mat-label>
-          <input matInput formControlName="role" placeholder="User role" readonly>
-        </mat-form-field>
+        <app-form-field label="Email" formControlName="email" placeholder="User email" type="email" [readonly]="true">
+        </app-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>New Password</mat-label>
-          <input matInput formControlName="password" placeholder="User new password" type="password">
-          <mat-error *ngIf="userForm.get('password')?.hasError('required')">
-            Password is required
-          </mat-error>
-        </mat-form-field>
+        <app-form-field label="Role" formControlName="role" placeholder="User role" type="text" [readonly]="true">
+        </app-form-field>
+
+        <app-form-field label="New Password" formControlName="password" placeholder="User new password" type="password">
+        </app-form-field>
+        <mat-error *ngIf="userForm.get('password')?.touched && userForm.get('password')?.hasError('required')">
+          Password is required
+        </mat-error>
 
         <div class="button-container">
-          <button type="button" mat-button [routerLink]="['/categories']">Cancel</button>
           <button type="submit" mat-raised-button color="primary" [disabled]="userForm.invalid">
             Update Password
           </button>

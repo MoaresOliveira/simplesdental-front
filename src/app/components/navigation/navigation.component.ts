@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -19,15 +19,25 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   isAdmin: boolean = false;
   isLoggedIn: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {
-    authService.authChanged.subscribe(() => {
-      this.isAdmin = this.authService.isAdmin();
-      this.isLoggedIn = this.authService.isLoggedIn();
+    this.authService.authChanged.subscribe(() => {
+      this.validateUser();
     })
+  }
+
+  ngOnInit(): void {
+    this.validateUser();
+  }
+
+  validateUser() {
+    this.isAdmin = this.authService.isAdmin();
+    this.isLoggedIn = this.authService.isLoggedIn();
+    console.log('isAdmin:', this.isAdmin);
+    console.log('isLoggedIn:', this.isLoggedIn);
   }
 
   home() {

@@ -1,16 +1,16 @@
-import { AuthService } from './../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatError } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import {MatTabsModule} from '@angular/material/tabs';
+
+import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
+import { AuthService } from './../../services/auth.service';
 
 
 @Component({
@@ -20,12 +20,12 @@ import {MatTabsModule} from '@angular/material/tabs';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
+    MatError,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    FormFieldComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -116,5 +116,13 @@ export class LoginComponent {
         this.loading = false;
       }
     });
+  }
+
+  registerControl(name: string): FormControl {
+    return this.registerForm.get(name) as FormControl;
+  }
+
+  loginControl(name: string): FormControl {
+    return this.loginForm.get(name) as FormControl;
   }
 }

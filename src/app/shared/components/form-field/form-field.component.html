@@ -1,0 +1,27 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{label}}</mat-label>
+  @if (type !== 'textarea') {
+    <input
+      matInput
+      [value]="value"
+      (input)="handleInput($event)"
+      [disabled]="disabled"
+      [placeholder]="placeholder"
+      (blur)="onTouched()"
+      [type]="type"
+      [attr.required]="required"
+      readonly="{{readonly}}">
+  } @else {
+    <textarea
+      matInput
+      [value]="value"
+      (input)="handleInput($event)"
+      [disabled]="disabled"
+      [placeholder]="placeholder"
+      (blur)="onTouched()"
+      rows="4"
+      [attr.required]="required"
+      readonly="{{readonly}}"
+    ></textarea>
+  }
+</mat-form-field>

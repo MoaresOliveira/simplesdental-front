@@ -27,6 +27,10 @@ export class AuthService {
   }
 
   getUser(): User {
+    const userStorage = localStorage.getItem('user');
+    if (!this.user && userStorage) {
+      this.user = JSON.parse(userStorage);
+    }
     return this.user;
   }
 
@@ -42,7 +46,8 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.user?.role == 'ADMIN' || false;
+    const user = this.getUser()
+    return user.role == 'ADMIN' || false;
   }
 
   registerUser(user: User): Observable<User> {

@@ -7,22 +7,18 @@
             <mat-spinner></mat-spinner>
           </div>
           <form [formGroup]="loginForm" (ngSubmit)="login()" *ngIf="!loading">
+            <app-form-field label="Email" formControlName="email" placeholder="User email" type="email">
+            </app-form-field>
+            <mat-error *ngIf="loginControl('email').touched && loginControl('email').hasError('required')">
+              Email is required
+            </mat-error>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" placeholder="User email" required>
-              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-                Email is required
-              </mat-error>
-            </mat-form-field>
+            <app-form-field label="Password" formControlName="password" placeholder="User password" type="password">
+            </app-form-field>
+            <mat-error *ngIf="loginControl('password').touched && loginControl('password').hasError('required')">
+              Password is required
+            </mat-error>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Password</mat-label>
-              <input matInput type="password" formControlName="password" placeholder="User password" required>
-              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-                Password is required
-              </mat-error>
-            </mat-form-field>
 
             <div class="button-container">
               <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">
@@ -40,41 +36,36 @@
           </div>
 
           <form [formGroup]="registerForm" (ngSubmit)="register()" *ngIf="!loading">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="name" placeholder="User name" required>
-              <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
-                Name is required
-              </mat-error>
-            </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" placeholder="User email" required>
-              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-                Email is required
-              </mat-error>
-              <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-                Email is invalid
-              </mat-error>
-            </mat-form-field>
+            <app-form-field label="Name" formControlName="name" placeholder="User name" type="text">
+            </app-form-field>
+            <mat-error *ngIf="registerControl('name').touched && registerControl('name').hasError('required')">
+              Name is required
+            </mat-error>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Password</mat-label>
-              <input matInput type="password" formControlName="password" placeholder="User password" required>
-              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-                Password is required
-              </mat-error>
-            </mat-form-field>
+            <app-form-field label="Email" formControlName="email" placeholder="User email" type="email">
+            </app-form-field>
+            <mat-error *ngIf="registerControl('email').touched && registerControl('email').hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="registerControl('email').touched && registerControl('email').hasError('email')">
+              Email is invalid
+            </mat-error>
 
+            <app-form-field label="Password" formControlName="password" placeholder="User password" type="password">
+            </app-form-field>
+            <mat-error *ngIf="registerControl('password').touched && registerControl('password').hasError('required')">
+              Password is required
+            </mat-error>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Confirm Password</mat-label>
-              <input matInput type="password" formControlName="confirmPassword" placeholder="User password" required>
-              <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
-                Confirm your password
-              </mat-error>
-            </mat-form-field>
+            <app-form-field label="Confirm Password" formControlName="confirmPassword" placeholder="User password"
+              type="password">
+            </app-form-field>
+            <mat-error
+              *ngIf="registerControl('confirmPassword').touched && registerControl('confirmPassword').hasError('required')">
+              Confirm your password
+            </mat-error>
+
 
             <div class="button-container">
               <button type="submit" mat-raised-button color="primary" [disabled]="registerForm.invalid">
