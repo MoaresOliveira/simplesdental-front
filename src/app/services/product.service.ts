@@ -8,7 +8,7 @@ import { Page } from '../models/page.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = '/api/products';
+  private apiUrl = '/api/v2/products';
 
   constructor(private http: HttpClient) { }
 
