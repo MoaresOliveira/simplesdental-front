@@ -1,12 +1,16 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { User } from '../../models/user.model';
+import { User } from '../models/user.model';
 import { inject } from '@angular/core';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const router = inject(Router)
+  const router = inject(Router);
   const userStorage = localStorage.getItem('user');
+  // if(state.url === '/login' && userStorage !== null) {
+  //   router.navigate(['/home']);
+  //   return false;
+  // }
   const rolesEnabled = route.data['roles'];
-  if(userStorage === null) {
+  if (userStorage === null) {
     router.navigate(['/login']);
     return false;
   }
@@ -14,6 +18,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (rolesEnabled.includes(user.role.toLowerCase())) {
     return true;
   }
-  console.log('User does not have the required role to access this route', user.role, rolesEnabled)
+  console.log(
+    'User does not have the required role to access this route',
+    user.role,
+    rolesEnabled
+  );
   return false;
 };

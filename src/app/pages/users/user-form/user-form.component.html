@@ -1,0 +1,40 @@
+<div class="container">
+  <mat-card class="user-form-card">
+    <mat-card-header>
+      <mat-card-title>Edit User</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+
+        <app-form-field label="Name" formControlName="name" placeholder="User name" type="text" [required]="true">
+        </app-form-field>
+        <mat-error *ngIf="control('name').touched && control('name').hasError('required')">
+          Name is required
+        </mat-error>
+
+        <app-form-field label="Email" formControlName="email" placeholder="User email" type="email" [required]="true">
+        </app-form-field>
+        <mat-error *ngIf="control('email').touched && control('email').hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="control('email').touched && control('email').hasError('email')">
+          Email is invalid
+        </mat-error>
+
+        <app-select-field label="Role" formControlName="role" placeholder="User role" type="text" [options]="['USER', 'ADMIN']" [primitive]="true" [canBeEmpty]="false" [required]="true">
+        </app-select-field>
+
+        <div class="button-container">
+          <button type="button" mat-button [routerLink]="['/users']">Cancel</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="userForm.invalid">
+            Update
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

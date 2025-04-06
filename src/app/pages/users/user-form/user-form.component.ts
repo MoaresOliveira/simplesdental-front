@@ -1,45 +1,48 @@
-import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatError, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatError } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
-import { User } from '../../core/models/user.model';
-import { MatIconModule } from '@angular/material/icon';
-import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
+
+import { User } from '../../../core/models/user.model';
+import { UserService } from '../../../core/services/user.service';
+import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-user-form',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
     MatButtonModule,
+    MatSelectModule,
+    MatCheckboxModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatIconModule,
     FormFieldComponent,
     MatError,
+    SelectFieldComponent,
   ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+  templateUrl: './user-form.component.html',
+  styleUrl: './user-form.component.scss',
 })
-export class ProfileComponent {
+export class UserFormComponent {
   userForm!: FormGroup;
-  userId: number | null = null;
-  isEditMode = false;
+  userId!: number;
   loading = false;
 
   constructor(
@@ -47,27 +50,31 @@ export class ProfileComponent {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.loadUser();
+
+    this.route.params.subscribe((params) => {
+      if (params['id'] && params['id'] !== 'new') {
+        this.userId = +params['id'];
+        this.loadUser(this.userId);
+      }
+    });
   }
 
   initForm(): void {
     this.userForm = this.fb.group({
-      name: [''],
-      email: [''],
-      role: [''],
-      password: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', [Validators.required]],
     });
   }
 
-  loadUser(): void {
+  loadUser(id: number): void {
     this.loading = true;
-    this.authService.getAuthContext().subscribe({
+    this.userService.getUserById(id).subscribe({
       next: (user) => {
         this.userForm.patchValue({
           name: user.name,
@@ -80,40 +87,38 @@ export class ProfileComponent {
         console.error('Error loading user', error);
         this.snackBar.open('Error loading user', 'Close', { duration: 3000 });
         this.loading = false;
-        this.router.navigate(['/categories']);
+        this.router.navigate(['/users']);
       },
     });
   }
 
-  logout() {
-    this.authService.logout();
-    this.snackBar.open('Logged out successfully', 'Close', { duration: 3000 });
-    this.router.navigate(['/login']);
-  }
-
-  updatePassword(): void {
+  onSubmit(): void {
     if (this.userForm.invalid) {
       return;
     }
 
-    const password = this.userForm.get('password')?.value;
-
     this.loading = true;
-    this.userService.updatePassword(password).subscribe({
-      next: () => {
-        this.snackBar.open('Password updated successfully', 'Close', {
+    const userData: User = {
+      ...this.userForm.value,
+    };
+
+    this.userService.updateUser(this.userId, userData).subscribe({
+      next: (_) => {
+        this.snackBar.open('User updated successfully', 'Close', {
           duration: 3000,
         });
         this.loading = false;
-        this.router.navigate(['/home']);
+        this.router.navigate(['/users']);
       },
       error: (error) => {
-        console.error('Error updating password', error);
-        this.snackBar.open('Error updating password', 'Close', {
-          duration: 3000,
-        });
+        console.error('Error updating user', error);
+        this.snackBar.open('Error updating user', 'Close', { duration: 3000 });
         this.loading = false;
       },
     });
+  }
+
+  control(controlName: string): FormControl {
+    return this.userForm.get(controlName) as FormControl;
   }
 }

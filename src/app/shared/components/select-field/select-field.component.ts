@@ -3,33 +3,32 @@ import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
-type InputType = 'text' | 'password' | 'number' | 'email' | 'textarea';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-form-field',
-  standalone: true,
+  selector: 'app-select-field',
   imports: [
     CommonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule
   ],
-  templateUrl: './form-field.component.html',
-  styleUrl: './form-field.component.scss',
+  templateUrl: './select-field.component.html',
+  styleUrl: './select-field.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormFieldComponent),
+      useExisting: forwardRef(() => SelectFieldComponent),
       multi: true
     }
   ]
 })
-export class FormFieldComponent implements ControlValueAccessor, OnInit {
+export class SelectFieldComponent implements ControlValueAccessor, OnInit {
   @Input({required: true}) label = '';
-  @Input() placeholder = '';
-  @Input() type: InputType = 'text';
-  @Input() textarea = false;
-  @Input() rows = 3;
+  @Input() format: {label: string, value: string} = {label: 'name', value: 'id'};
+  @Input() options: any[] = [];
+  @Input() canBeEmpty = true;
+  @Input() primitive = false;
   @Input() readonly = false;
   @Input() required = false;
 
@@ -59,8 +58,8 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
-  handleInput(event: any): void {
-    const value = event.target.value;
+  handleChange(event: MatSelectChange<any>): void {
+    const value = event.value;
     this.value = value;
     this.onChange(value);
   }

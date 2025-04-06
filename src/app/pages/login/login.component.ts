@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatError } from '@angular/material/input';
@@ -10,8 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
-import { AuthService } from './../../services/auth.service';
-
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -25,10 +30,10 @@ import { AuthService } from './../../services/auth.service';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTabsModule,
-    FormFieldComponent
+    FormFieldComponent,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   loginForm!: FormGroup;
@@ -39,13 +44,15 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/home']);
+    }
     this.initForm();
   }
 
@@ -66,8 +73,12 @@ export class LoginComponent {
   passwordMismatch(): boolean {
     const passwordControl = this.registerForm.get('password');
     const confirmPasswordControl = this.registerForm.get('confirmPassword');
-    console.log(!!confirmPasswordControl?.value)
-    return passwordControl?.value && confirmPasswordControl?.value && passwordControl?.value !== confirmPasswordControl?.value;
+    console.log(!!confirmPasswordControl?.value);
+    return (
+      passwordControl?.value &&
+      confirmPasswordControl?.value &&
+      passwordControl?.value !== confirmPasswordControl?.value
+    );
   }
 
   login() {
@@ -86,9 +97,11 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Error logging in user', error);
-        this.snackBar.open('Error logging in user', 'Close', { duration: 3000 });
+        this.snackBar.open('Error logging in user', 'Close', {
+          duration: 3000,
+        });
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -97,7 +110,10 @@ export class LoginComponent {
       return;
     }
 
-    if (this.registerForm.value.password !== this.registerForm.value.confirmPassword) {
+    if (
+      this.registerForm.value.password !==
+      this.registerForm.value.confirmPassword
+    ) {
       this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
       return;
     }
@@ -105,16 +121,20 @@ export class LoginComponent {
     this.loading = true;
     this.authService.registerUser(this.registerForm.value).subscribe({
       next: () => {
-        this.snackBar.open('Registration successful', 'Close', { duration: 3000 });
+        this.snackBar.open('Registration successful', 'Close', {
+          duration: 3000,
+        });
         this.router.navigate(['/login']);
         this.initForm();
         this.loading = false;
       },
       error: (error) => {
         console.error('Error registering user', error);
-        this.snackBar.open('Error registering user', 'Close', { duration: 3000 });
+        this.snackBar.open('Error registering user', 'Close', {
+          duration: 3000,
+        });
         this.loading = false;
-      }
+      },
     });
   }
 
