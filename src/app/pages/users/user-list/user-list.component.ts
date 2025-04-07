@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { User } from '../../../core/models/user.model';
@@ -7,9 +7,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-list',
@@ -23,14 +24,21 @@ import { CommonModule } from '@angular/common';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatPaginatorModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   users: User[] = [];
   displayedColumns: string[] = ['id', 'name', 'email', 'role', 'actions'];
   loading = true;
+  pageIndex = 0;
+  pageSize = 10;
+  totalElements = 0;
+  pageCache = new Map<number, User[]>();
 
   constructor(
     private userService: UserService,
@@ -43,7 +51,7 @@ export class UserListComponent {
 
   loadUsers(): void {
     this.loading = true;
-    this.userService.getAllUsers().subscribe({
+    this.userService.getAllUsers(this.pageIndex, this.pageSize).subscribe({
       next: (data) => {
         this.users = data.content;
         this.loading = false;
@@ -73,5 +81,14 @@ export class UserListComponent {
         },
       });
     }
+  }
+
+  paginationHandler(event: PageEvent): void {
+    if(event.pageSize !== this.pageSize) {
+      this.pageCache.clear();
+    }
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadUsers();
   }
 }

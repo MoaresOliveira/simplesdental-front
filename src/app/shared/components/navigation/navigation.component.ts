@@ -36,8 +36,6 @@ export class NavigationComponent implements OnInit {
   validateUser() {
     this.isAdmin = this.authService.isAdmin();
     this.isLoggedIn = this.authService.isLoggedIn();
-    console.log('isAdmin:', this.isAdmin);
-    console.log('isLoggedIn:', this.isLoggedIn);
   }
 
   home() {

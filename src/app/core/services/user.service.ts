@@ -16,8 +16,10 @@ export class UserService {
     return this.http.put<void>(`${this.apiUrl}/password`, { password });
   }
 
-  getAllUsers(): Observable<Page<User>> {
-    return this.http.get<Page<User>>(`${this.apiUrl}`);
+  getAllUsers(page: number, size: number): Observable<Page<User>> {
+    return this.http.get<Page<User>>(`${this.apiUrl}`, {
+      params: { page, size },
+    });
   }
 
   getUserById(id: number): Observable<User> {

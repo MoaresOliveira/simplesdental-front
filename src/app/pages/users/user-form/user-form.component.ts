@@ -66,7 +66,7 @@ export class UserFormComponent {
 
   initForm(): void {
     this.userForm = this.fb.group({
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
       email: ['', [Validators.required, Validators.email]],
       role: ['', [Validators.required]],
     });

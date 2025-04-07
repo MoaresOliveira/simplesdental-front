@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatHint, MatInputModule } from '@angular/material/input';
 
 type InputType = 'text' | 'password' | 'number' | 'email' | 'textarea';
 
@@ -12,7 +12,7 @@ type InputType = 'text' | 'password' | 'number' | 'email' | 'textarea';
   imports: [
     CommonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
@@ -30,6 +30,8 @@ export class FormFieldComponent implements ControlValueAccessor, OnInit {
   @Input() type: InputType = 'text';
   @Input() textarea = false;
   @Input() rows = 3;
+  @Input() maxlength: number | null = null;
+  @Input() min: number | null = null;
   @Input() readonly = false;
   @Input() required = false;
 

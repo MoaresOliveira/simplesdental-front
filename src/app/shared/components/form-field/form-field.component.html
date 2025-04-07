@@ -10,6 +10,9 @@
       (blur)="onTouched()"
       [type]="type"
       [attr.required]="required"
+      [attr.maxlength]="maxlength"
+      min="{{min}}"
+      step="0.01"
       readonly="{{readonly}}">
   } @else {
     <textarea
@@ -21,7 +24,11 @@
       (blur)="onTouched()"
       rows="4"
       [attr.required]="required"
+      [attr.maxlength]="maxlength"
       readonly="{{readonly}}"
     ></textarea>
+    @if(maxlength) {
+      <p class="hint">{{ value.length || 0 }}/{{ maxlength }}</p>
+    }
   }
 </mat-form-field>

@@ -1,8 +1,18 @@
 :host {
   display: block;
+  position: relative;
   .full-width {
     width: 100%;
   }
 
-
+  .hint {
+    text-align: end;
+    font-size: 0.6rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }

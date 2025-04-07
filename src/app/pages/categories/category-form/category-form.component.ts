@@ -1,20 +1,14 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatError, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatError } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { Category } from '../../../core/models/category.model';
+import { Category, CategoryValidation } from '../../../core/models/category.model';
 import { CategoryService } from '../../../core/services/category.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 
@@ -38,6 +32,7 @@ import { FormFieldComponent } from '../../../shared/components/form-field/form-f
 export class CategoryFormComponent implements OnInit {
   categoryForm!: FormGroup;
   categoryId: number | null = null;
+  validation = CategoryValidation;
   isEditMode = false;
   loading = false;
 
@@ -63,8 +58,8 @@ export class CategoryFormComponent implements OnInit {
 
   initForm(): void {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: [''],
+      name: ['', CategoryValidation.validators.name],
+      description: ['', CategoryValidation.validators.description],
     });
   }
 

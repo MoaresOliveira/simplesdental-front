@@ -10,22 +10,32 @@
 
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
 
-        <app-form-field label="Name" formControlName="name" placeholder="Product name">
+        <app-form-field label="Name" formControlName="name" placeholder="Product name"
+          [required]="validation.name.required" [maxlength]="validation.name.maxLength">
         </app-form-field>
         <mat-error *ngIf="productForm.get('name')?.touched && productForm.get('name')?.hasError('required')">
           Name is required
         </mat-error>
+        <mat-error *ngIf="productForm.get('name')?.touched && productForm.get('name')?.hasError('maxlength')">
+          Name must be less than {{ validation.name.maxLength }} characters
+        </mat-error>
 
-        <app-form-field label="Description" formControlName="description" placeholder="Product description" type="textarea">
+        <app-form-field label="Description" formControlName="description" placeholder="Product description"
+          type="textarea" [maxlength]="validation.description.maxLength">
         </app-form-field>
+        <mat-error
+          *ngIf="productForm.get('description')?.touched && productForm.get('description')?.hasError('maxlength')">
+          Description must be less than {{ validation.description.maxLength }} characters
+        </mat-error>
 
-        <app-form-field label="Price" formControlName="price" placeholder="0.00" type="number">
+        <app-form-field label="Price" formControlName="price" placeholder="0.00" type="number"
+          [required]="validation.price.required" [min]="validation.price.min">
         </app-form-field>
         <mat-error *ngIf="productForm.get('price')?.touched && productForm.get('price')?.hasError('required')">
           Price is required
         </mat-error>
         <mat-error *ngIf="productForm.get('price')?.touched && productForm.get('price')?.hasError('min')">
-          Price must be greater than or equal to 0
+          Price must be greater than 0
         </mat-error>
 
         <app-form-field label="Code" formControlName="code" placeholder="Product code" type="number">
@@ -39,6 +49,9 @@
               {{ category.name }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.hasError('required')">
+            Category is required
+          </mat-error>
         </mat-form-field>
 
         <div class="checkbox-field">

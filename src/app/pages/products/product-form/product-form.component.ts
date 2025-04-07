@@ -16,7 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Category } from '../../../core/models/category.model';
-import { Product } from '../../../core/models/product.model';
+import { Product, ProductValidation } from '../../../core/models/product.model';
 import { CategoryService } from '../../../core/services/category.service';
 import { ProductService } from '../../../core/services/product.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
@@ -45,6 +45,7 @@ export class ProductFormComponent implements OnInit {
   productId: number | null = null;
   isEditMode = false;
   loading = false;
+  validation = ProductValidation;
   categories: Category[] = [];
 
   constructor(
@@ -71,17 +72,17 @@ export class ProductFormComponent implements OnInit {
 
   initForm(): void {
     this.productForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
-      status: [true, [Validators.required]],
-      code: [0],
-      categoryId: [''],
+      name: ['', ProductValidation.validators.name],
+      description: ['', ProductValidation.validators.description],
+      price: [null, ProductValidation.validators.price],
+      status: [true, ProductValidation.validators.status],
+      code: [null],
+      categoryId: ['', ProductValidation.validators.categoryId],
     });
   }
 
   loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe({
+    this.categoryService.getAllCategories(0, 10).subscribe({
       next: (data) => {
         this.categories = data.content;
       },

@@ -3,10 +3,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.mat-mdc-form-field-error {
-  margin-top: -20px;
-  margin-bottom: 10px;
-}
+:not(.mat-mdc-form-field-error-wrapper) > .mat-mdc-form-field-error {
+    margin-top: -15px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    padding: 0 16px;
+  }
+
 
 .mat-mdc-card-header {
   margin-bottom: 10px;

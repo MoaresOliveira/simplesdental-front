@@ -9,14 +9,23 @@
       </div>
 
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <app-form-field label="Name" formControlName="name" placeholder="Category name">
+        <app-form-field label="Name" formControlName="name" placeholder="Category name"
+          [required]="validation.name.required" [maxlength]="validation.name.maxLength">
         </app-form-field>
         <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('required')">
           Name is required
         </mat-error>
+        <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('maxLength')">
+          Name must be less than {{ validation.name.maxLength }} characters
+        </mat-error>
 
-        <app-form-field label="Name" formControlName="name" placeholder="Category name" type="textarea">
+        <app-form-field label="Description" formControlName="description" placeholder="Category description"
+          type="textarea" [maxlength]="validation.description.maxLength">
         </app-form-field>
+        <mat-error *ngIf="categoryForm.get('description')?.touched && categoryForm.get('description')?.hasError('maxlength')">
+          Description must be less than {{ validation.description.maxLength }} characters
+        </mat-error>
+
 
         <div class="button-container">
           <button type="button" mat-button [routerLink]="['/categories']">Cancel</button>

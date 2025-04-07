@@ -7,4 +7,11 @@ export interface Page<T> {
   first: boolean;
   last: boolean;
   empty: boolean;
+  pageable: Pageable;
 }
+
+interface Pageable {
+  pageNumber: number;
+  pageSize: number;
+}
+

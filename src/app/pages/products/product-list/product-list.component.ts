@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { Product } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-product-list',
@@ -27,11 +28,14 @@ import { User } from '../../../core/models/user.model';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatPaginatorModule,
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   products: Product[] = [];
   displayedColumns: string[] = [
     'id',
@@ -43,6 +47,10 @@ export class ProductListComponent implements OnInit {
   ];
   loading = true;
   isAdmin: boolean = false;
+  pageIndex = 0;
+  pageSize = 10;
+  totalElements = 0;
+  pageCache = new Map<number, Product[]>();
 
   constructor(
     private productService: ProductService,
@@ -58,20 +66,21 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    this.productService.getAllProducts().subscribe({
-      next: (data) => {
-        this.products = data.content;
-        console.log('Products loaded:', this.products);
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching products', error);
-        this.snackBar.open('Error loading products', 'Close', {
-          duration: 3000,
-        });
-        this.loading = false;
-      },
-    });
+    this.productService
+      .getAllProducts(this.pageIndex, this.pageSize)
+      .subscribe({
+        next: (data) => {
+          this.products = data.content;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error fetching products', error);
+          this.snackBar.open('Error loading products', 'Close', {
+            duration: 3000,
+          });
+          this.loading = false;
+        },
+      });
   }
 
   deleteProduct(id: number): void {
@@ -91,5 +100,14 @@ export class ProductListComponent implements OnInit {
         },
       });
     }
+  }
+
+  paginationHandler(event: PageEvent): void {
+    if(event.pageSize !== this.pageSize) {
+      this.pageCache.clear();
+    }
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadProducts();
   }
 }

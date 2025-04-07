@@ -46,7 +46,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const user = this.getUser();
-    return user.role == 'ADMIN' || false;
+    return user?.role == 'ADMIN' || false;
   }
 
   registerUser(user: User): Observable<User> {
